@@ -1,0 +1,18 @@
+#set the name, addr and environment type for the server
+name: appblueprint
+addr: ":4000"
+env: "dev"
+
+#set the amount of time to run the server.HeartBeats function
+heartbeat: 5m
+
+#set up the folders
+folders:
+  assets: ./assets
+  models: ./app
+  views: ./views
+
+#set up the template folder and settings
+templates:
+  dir: ./templates
+  ext: .tmpl
