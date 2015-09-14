@@ -11,7 +11,7 @@ func main() {
 
 	if err := app.App.Load("./config/app.yaml"); err != nil {
 		if app.App.Env == "dev" {
-			panic(msg)
+			panic(err.Error())
 		}
 	}
 

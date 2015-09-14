@@ -8,11 +8,11 @@ heartbeat: 5m
 
 #set up the folders
 folders:
-  assets: ./assets
-  models: ./app
-  views: ./views
+  assets: ../assets
+  models: ../app
+  views: ../views
 
 #set up the template folder and settings
 templates:
-  dir: ./templates
+  dir: ../templates
   ext: .tmpl
