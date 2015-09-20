@@ -16,12 +16,15 @@ func NewMockTodo(db []*Todo) *MockTodo {
 }
 
 // New creates and adds a new schema into the database
-func (s *MockTodo) New(task string, desc string) error {
+func (s *MockTodo) New(task string, desc string, stamp int64) error {
+	co := time.Unix(stamp, 0)
+
 	return s.Save(&Todo{
 		Task:        task,
 		Description: desc,
-		Created:     time.Now(),
-		Updated:     time.Now(),
+		Stamp:       stamp,
+		Day:         co.Day(),
+		Month:       co.Month().String(),
 	})
 }
 
@@ -51,7 +54,7 @@ func (s *MockTodo) Save(m *Todo) error {
 		}
 	}
 
-	m.Created = time.Now()
+	// m.Created = time.Now().String()
 	s.db = append(s.db, m)
 	return nil
 }
@@ -71,7 +74,7 @@ func (s *MockTodo) Update(m *Todo) error {
 		return fmt.Errorf("%d id does not exists", m.ID)
 	}
 
-	m.Updated = time.Now()
+	// m.Updated = time.Now().String()
 	s.db[ind] = m
 	return nil
 }
@@ -94,5 +97,29 @@ func (s *MockTodo) Destroy(m int) error {
 	}
 
 	s.db = append(s.db[0:ind], s.db[ind:]...)
+	return nil
+}
+
+// Uncomplete sets  a todo from the database as uncompleted
+func (s *MockTodo) Uncomplete(m int) error {
+	fm, err := s.FindID(m)
+
+	if err != nil {
+		return err
+	}
+
+	fm.Completed = 0
+	return nil
+}
+
+// Complete sets  a todo from the database as completed
+func (s *MockTodo) Complete(m int) error {
+	fm, err := s.FindID(m)
+
+	if err != nil {
+		return err
+	}
+
+	fm.Completed = 1
 	return nil
 }

@@ -1,5 +1,5 @@
 #set the name, addr and environment type for the server
-name: appblueprint
+name: "app:blueprint"
 addr: ":4000"
 env: "dev"
 
@@ -8,11 +8,17 @@ heartbeat: 5m
 
 #set up the folders
 folders:
-  assets: ../assets
-  models: ../app
-  views: ../views
+  assets: ./assets
+  models: ./app
+  views: ./views
 
 #set up the template folder and settings
 templates:
-  dir: ../templates
+  dir: ./templates
   ext: .tmpl
+
+#use the generic db config parameters
+db:
+  name: apps
+  type: "mysql"
+  addr: "root:@tcp(localhost:3306)/apps"

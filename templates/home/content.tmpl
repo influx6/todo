@@ -1,0 +1,57 @@
+{{ define "content" }}
+ <header class="godo_header">
+   <div class="container rows">
+       <div class="godo_logo"></div>
+      <h1 class="godo_title">Godo</h1>
+      <a href="#" class="button new"><i class="fa fa-plus fa-3x"></i></a>
+   </div>
+ </header>
+
+  <section class="todo_new">
+    <div class="container rows">
+      <div class="todo_form_container columns-12-4 hide">
+        <form method="post" action="/todo/" class="todo_new_form">
+          <div class="columns-80 form_inputs ">
+            <p class="columns-12-1 task">
+                <input type="text" name="task" placeholder="Task Name"/>
+            </p>
+            <p class="columns-12-1 desc leftjustify">
+                <textarea name="description" placeholder="Task Description"></textarea>
+            </p>
+          </div>
+          <!-- <div class="columns-12-12 band"></div> -->
+          <div class="columns-20 form_submit leftjustify">
+              <p class="columns-12-1"><input type="Submit" value="Add"></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="rows todo_lists">
+    <div class="container">
+      <ul class="todo_items columns-12-1">
+        {{ range . }}
+        <li class="todo {{ if .IsDone }}completed{{ end }}">
+          <div class="columns-12-3 content">
+            <label class="stamp"><span class="tiny">Day</span>{{.Day}}</label>
+            <label class="month fadable">{{ .Month }}</label>
+            <h2 class="title fadable">{{ .Task }}</h2>
+            <p class="desc fadable">{{ .Description }}</p>
+          </div>
+          <div class="columns-12-11 actions">
+            <a href="#" data-id="{{.ID}}" class="delete">
+              <label><i class="fa fa-trash fa-2x"></i></label>
+            </a>
+            <a href="#" data-id="{{.ID}}" data-state="{{.Completed}}" class="mark">
+              <label>
+                <i class="fa fa-check fa-2x"></i></a>
+              </label>
+            </a>
+          </div>
+        </li>
+        {{ end }}
+      </ul>
+    </div>
+  </section>
+{{ end }}

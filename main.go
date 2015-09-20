@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/influx6/appblueprint/app"
-	"github.com/influx6/relay/engine"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/influx6/todo/app"
 )
 
 func main() {
@@ -15,6 +15,6 @@ func main() {
 		}
 	}
 
-	engine.AppSignalInit(app.App)
-	log.Printf("Sucessfully booted App@%+s", app.App.EngineAddr())
+	log.Printf("%s is now up", app.App.Name)
+	app.App.Serve()
 }

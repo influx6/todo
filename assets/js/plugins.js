@@ -22,3 +22,40 @@
 }());
 
 // Place any jQuery/helper plugins in here.
+
+
+//Adding placeholders
+function PrettyForm(tag,submit){
+  $(function() {
+      $(tag).focus(function() {
+          var input = $(this);
+          if (input.val() == input.attr(tag)) {
+              input.val('');
+              input.removeClass(tag);
+          }
+      }).blur(function() {
+          var input = $(this);
+          if (input.val() == '' || input.val() == input.attr(tag)) {
+              input.addClass(tag);
+              input.val(input.attr(tag));
+          }
+      }).blur();
+  });
+}
+
+function FormSubmit(tag,submit){
+  $(function() {
+      $(tag).submit(function(ev) {
+          // ev.preventDefault()
+          $(this).find(tag).each(function() {
+              var input = $(this);
+              if (input.val() == input.attr(tag)) {
+                  input.val('');
+              }
+          })
+          if(typeof(submit) == 'function'){
+            submit(ev)
+          }
+      });
+  });
+}
