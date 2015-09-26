@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/influx6/assets"
 	"github.com/influx6/relay"
 	"github.com/influx6/relay/engine"
 )
@@ -25,8 +26,8 @@ type jsonTask struct {
 type TodoController struct {
 	*relay.Controller
 	db   TodoDatabase
-	home *relay.AssetTemplate
-	edit *relay.AssetTemplate
+	home *assets.AssetTemplate
+	edit *assets.AssetTemplate
 }
 
 // NewTodoController returns a new TodoController
@@ -43,7 +44,7 @@ func NewTodoController(path string, db TodoDatabase, app *engine.Engine) *TodoCo
 }
 
 // Index handles the request for /
-func (c *TodoController) Index(req *relay.HTTPRequest) {
+func (c *TodoController) Index(req *relay.Context, next relay.NextHandler) {
 	todos, err := c.db.FindAll()
 
 	if err != nil {
@@ -51,20 +52,30 @@ func (c *TodoController) Index(req *relay.HTTPRequest) {
 		return
 	}
 
-	_, err = req.Write(relay.HTMLRender(200, "layout", todos, c.home.Tmpl))
+	html := relay.HTMLRender(200, "layout", todos, c.home.Tmpl)
+
+	err = relay.BasicHeadEncoder.Encode(req, html.Head)
 
 	if err != nil {
 		req.Res.WriteHeader(504)
 	}
+
+	_, err = relay.HTMLEncoder.Encode(req.Res, html)
+
+	if err != nil {
+		req.Res.WriteHeader(504)
+	}
+	next(req)
 }
 
 //Save handles save requests
-func (c *TodoController) Save(req *relay.HTTPRequest) {
-	message, err := req.Message()
+func (c *TodoController) Save(req *relay.Context, next relay.NextHandler) {
+	message, err := relay.MessageDecoder.Decode(req)
 
 	if err != nil {
 		req.Res.WriteHeader(404)
-		req.Write("Err decoding body!")
+		req.Res.Write([]byte("Err decoding body!"))
+		return
 	}
 
 	if message.MessageType == "body" {
@@ -95,15 +106,17 @@ func (c *TodoController) Save(req *relay.HTTPRequest) {
 	log.Printf("Submitting: %s %s", task, desc)
 	if err := c.db.New(task, desc, 0); err != nil {
 		req.Res.WriteHeader(http.StatusExpectationFailed)
+		log.Printf("failed: %s", err)
 		return
 	}
 
-	c.Render("/todo", req.Res, req.Req, req.Params)
+	c.Render("/todo", req.Res, req.Req, req.ToMap())
+	next(req)
 }
 
 //UpdateAsComplete handles save requests
-func (c *TodoController) UpdateAsComplete(req *relay.HTTPRequest) {
-	id, err := strconv.Atoi(req.Params.Get("id").(string))
+func (c *TodoController) UpdateAsComplete(req *relay.Context, next relay.NextHandler) {
+	id, err := strconv.Atoi(req.Get("id").(string))
 
 	if err != nil {
 		req.Res.WriteHeader(http.StatusBadRequest)
@@ -116,11 +129,12 @@ func (c *TodoController) UpdateAsComplete(req *relay.HTTPRequest) {
 	}
 
 	req.Res.WriteHeader(http.StatusOK)
+	next(req)
 }
 
 //UpdateAsUncomplete handles save requests
-func (c *TodoController) UpdateAsUncomplete(req *relay.HTTPRequest) {
-	id, err := strconv.Atoi(req.Params.Get("id").(string))
+func (c *TodoController) UpdateAsUncomplete(req *relay.Context, next relay.NextHandler) {
+	id, err := strconv.Atoi(req.Get("id").(string))
 
 	if err != nil {
 		req.Res.WriteHeader(http.StatusBadRequest)
@@ -133,11 +147,12 @@ func (c *TodoController) UpdateAsUncomplete(req *relay.HTTPRequest) {
 	}
 
 	req.Res.WriteHeader(http.StatusOK)
+	next(req)
 }
 
 //Delete handles save requests
-func (c *TodoController) Delete(req *relay.HTTPRequest) {
-	id, err := strconv.Atoi(req.Params.Get("id").(string))
+func (c *TodoController) Delete(req *relay.Context, next relay.NextHandler) {
+	id, err := strconv.Atoi(req.Get("id").(string))
 
 	if err != nil {
 		req.Res.WriteHeader(http.StatusBadRequest)
@@ -150,12 +165,13 @@ func (c *TodoController) Delete(req *relay.HTTPRequest) {
 	}
 
 	req.Res.WriteHeader(http.StatusOK)
+	next(req)
 }
 
 func (c *TodoController) register() {
-	c.BindHTTP("post", `/`, c.Save, relay.BasicHTTPCodec)
-	c.BindHTTP("get head", "/", c.Index, relay.UseHTTPEncoder(relay.HTMLEncoder))
-	c.BindHTTP("post", `/{id:[\d+]}`, c.UpdateAsComplete, relay.BasicHTTPCodec)
-	c.BindHTTP("put", `/{id:[\d+]}`, c.UpdateAsUncomplete, relay.BasicHTTPCodec)
-	c.BindHTTP("delete", `/{id:[\d+]}`, c.Delete, relay.BasicHTTPCodec)
+	c.BindHTTP("post", `/`, c.Save)
+	c.BindHTTP("get head", "/", c.Index)
+	c.BindHTTP("post", `/{id:[\d+]}`, c.UpdateAsComplete)
+	c.BindHTTP("put", `/{id:[\d+]}`, c.UpdateAsUncomplete)
+	c.BindHTTP("delete", `/{id:[\d+]}`, c.Delete)
 }
