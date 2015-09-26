@@ -1,0 +1,55 @@
+{
+	"ImportPath": "github.com/influx6/todo",
+	"GoVersion": "go1.5",
+	"Deps": [
+		{
+			"ImportPath": "github.com/go-sql-driver/mysql",
+			"Comment": "v1.2-118-g3dd7008",
+			"Rev": "3dd7008ac1529aca1bcd8a9db75228a71ba23cac"
+		},
+		{
+			"ImportPath": "github.com/gorilla/websocket",
+			"Rev": "ab5b3a61f5b6aa323d66ece457334396c4ccdd03"
+		},
+		{
+			"ImportPath": "github.com/imdario/mergo",
+			"Comment": "0.2.0-5-g61a5285",
+			"Rev": "61a52852277811e93e06d28e0d0c396284a7730b"
+		},
+		{
+			"ImportPath": "github.com/influx6/assets",
+			"Rev": "2db3da1df5dc0ec13636b4cbf21126fb6af0f37d"
+		},
+		{
+			"ImportPath": "github.com/influx6/flux",
+			"Rev": "74872eab882dc50e1385fc27986abebe6ada3f5a"
+		},
+		{
+			"ImportPath": "github.com/influx6/reggy",
+			"Rev": "7248e9041fafa395351e3f33af3eb0e98f5d8f17"
+		},
+		{
+			"ImportPath": "github.com/influx6/relay",
+			"Comment": "v0.0.1-45-ga17b1f0",
+			"Rev": "a17b1f046a379eea0cba0030c33761bfe77086ce"
+		},
+		{
+			"ImportPath": "github.com/jmoiron/sqlx",
+			"Comment": "sqlx-v1.1-17-gc06fc0c",
+			"Rev": "c06fc0ca86a92cca7ea9eb4333b095584e7746f3"
+		},
+		{
+			"ImportPath": "github.com/tylerb/graceful",
+			"Comment": "v1.2.1",
+			"Rev": "ac9ebe4f1ee151ac1eeeaef32957085cba64d508"
+		},
+		{
+			"ImportPath": "golang.org/x/net/netutil",
+			"Rev": "db8e4de5b2d6653f66aea53094624468caad15d2"
+		},
+		{
+			"ImportPath": "gopkg.in/yaml.v2",
+			"Rev": "49c95bdc21843256fb6c4e0d370a05f24a0bf213"
+		}
+	]
+}
