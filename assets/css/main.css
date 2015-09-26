@@ -494,6 +494,7 @@ th {
   }
 }
 /*====================12-column-grids=============*/
+html,
 body {
   width: 100%;
   height: 100%;
@@ -506,8 +507,13 @@ a:visited {
   text-decoration: none;
   color: inherit;
 }
+.mainContent {
+  min-height: 100%;
+  height: 100%;
+}
 .container {
   max-width: 1110px;
+  min-height: 100%;
   height: 100%;
   margin: 0 auto;
 }
@@ -551,8 +557,6 @@ a:visited {
 }
 footer {
   display: block;
-  position: absolute;
-  bottom: 0px;
   padding: 1.6px;
   background: #222;
   color: #fff;
