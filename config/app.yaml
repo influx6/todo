@@ -21,4 +21,4 @@ templates:
 db:
   name: apps
   type: "mysql"
-  addr: "root:@tcp(localhost:3306)/apps"
+  addr: "adminSiVKWXi:pPVgKKk-WzFS@tcp(localhost:3306)/godo"
